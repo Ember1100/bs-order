@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.baisexy.bs_order.system.mapper.DataAnalyzeMapper">
+
+    <select id="getFoodAndAmountsByDate" resultType="cn.baisexy.bs_order.api.pojo.charts.FoodAndAmount">
+        select sum(od_f_amount) as amount, f.f_name as fName
+        from orderdetail od,
+             food f,
+             orders o
+        where od.od_f_id = f.f_id
+          and od.od_o_id = o.o_id
+          and o.o_date BETWEEN #{begin} and #{end}
+        group by od_f_id
+    </select>
+
+
+</mapper>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.baisexy.bs_order.system.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="cn.baisexy.bs_order.api.entity.User">
+        <id column="u_id" jdbcType="INTEGER" property="uId"/>
+        <result column="u_name" jdbcType="VARCHAR" property="uName"/>
+        <result column="u_pwd" jdbcType="VARCHAR" property="uPwd"/>
+        <result column="u_pn" jdbcType="VARCHAR" property="uPn"/>
+        <result column="u_address" jdbcType="VARCHAR" property="uAddress"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        u_id, u_name, u_pwd, u_pn, u_address
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where u_id = #{uId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from user
+        where u_id = #{uId,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="cn.baisexy.bs_order.api.entity.User">
+        insert into user (u_id, u_name, u_pwd,
+                          u_pn, u_address)
+        values (#{uId,jdbcType=INTEGER}, #{uName,jdbcType=VARCHAR}, #{uPwd,jdbcType=VARCHAR},
+                #{uPn,jdbcType=VARCHAR}, #{uAddress,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="cn.baisexy.bs_order.api.entity.User">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uId != null">
+                u_id,
+            </if>
+            <if test="uName != null">
+                u_name,
+            </if>
+            <if test="uPwd != null">
+                u_pwd,
+            </if>
+            <if test="uPn != null">
+                u_pn,
+            </if>
+            <if test="uAddress != null">
+                u_address,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uId != null">
+                #{uId,jdbcType=INTEGER},
+            </if>
+            <if test="uName != null">
+                #{uName,jdbcType=VARCHAR},
+            </if>
+            <if test="uPwd != null">
+                #{uPwd,jdbcType=VARCHAR},
+            </if>
+            <if test="uPn != null">
+                #{uPn,jdbcType=VARCHAR},
+            </if>
+            <if test="uAddress != null">
+                #{uAddress,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.baisexy.bs_order.api.entity.User">
+        update user
+        <set>
+            <if test="uName != null">
+                u_name = #{uName,jdbcType=VARCHAR},
+            </if>
+            <if test="uPwd != null">
+                u_pwd = #{uPwd,jdbcType=VARCHAR},
+            </if>
+            <if test="uPn != null">
+                u_pn = #{uPn,jdbcType=VARCHAR},
+            </if>
+            <if test="uAddress != null">
+                u_address = #{uAddress,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where u_id = #{uId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.baisexy.bs_order.api.entity.User">
+        update user
+        set u_name    = #{uName,jdbcType=VARCHAR},
+            u_pwd     = #{uPwd,jdbcType=VARCHAR},
+            u_pn      = #{uPn,jdbcType=VARCHAR},
+            u_address = #{uAddress,jdbcType=VARCHAR}
+        where u_id = #{uId,jdbcType=INTEGER}
+    </update>
+
+    <select id="findUser" resultType="cn.baisexy.bs_order.api.entity.User">
+        select <include refid="Base_Column_List"></include> from user where u_name = #{uName}
+    </select>
+
+    <select id="getAll" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+    </select>
+
+    <select id="searchByName" resultMap="BaseResultMap">
+        select *
+        from user
+        where u_name like '%${value}%' or u_pn like '%${value}%' or u_address like '%${value}%'
+    </select>
+
+    <select id="getListUser" resultMap="BaseResultMap">
+        select *
+        from user
+        limit #{begin}, #{end}
+    </select>
+
+
+</mapper>

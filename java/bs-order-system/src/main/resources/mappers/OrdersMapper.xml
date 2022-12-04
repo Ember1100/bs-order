@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.baisexy.bs_order.system.mapper.OrdersMapper">
+    <resultMap id="BaseResultMap" type="cn.baisexy.bs_order.api.entity.Orders">
+        <id column="o_id" jdbcType="INTEGER" property="oId"/>
+        <result column="o_date" jdbcType="VARCHAR" property="oDate"/>
+        <result column="o_payment" jdbcType="VARCHAR" property="oPayment"/>
+        <result column="o_u_id" jdbcType="INTEGER" property="oUId"/>
+        <result column="o_price" jdbcType="DECIMAL" property="oPrice"/>
+        <result column="o_status" jdbcType="VARCHAR" property="oStatus"/>
+        <result column="o_content" jdbcType="VARCHAR" property="oContent"/>
+        <result column="o_address" jdbcType="VARCHAR" property="oAddress"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        o_id, o_date, o_payment, o_u_id, o_price, o_status, o_content, o_address
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from orders
+        where o_id = #{oId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from orders
+        where o_id = #{oId,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="cn.baisexy.bs_order.api.entity.Orders">
+        insert into orders (o_id, o_date, o_payment,
+                            o_u_id, o_price, o_status,
+                            o_content, o_address)
+        values (#{oId,jdbcType=INTEGER}, #{oDate,jdbcType=VARCHAR}, #{oPayment,jdbcType=VARCHAR},
+                #{oUId,jdbcType=INTEGER}, #{oPrice,jdbcType=DECIMAL}, #{oStatus,jdbcType=VARCHAR},
+                #{oContent,jdbcType=VARCHAR}, #{oAddress,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="cn.baisexy.bs_order.api.entity.Orders">
+        insert into orders
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="oId != null">
+                o_id,
+            </if>
+            <if test="oDate != null">
+                o_date,
+            </if>
+            <if test="oPayment != null">
+                o_payment,
+            </if>
+            <if test="oUId != null">
+                o_u_id,
+            </if>
+            <if test="oPrice != null">
+                o_price,
+            </if>
+            <if test="oStatus != null">
+                o_status,
+            </if>
+            <if test="oContent != null">
+                o_content,
+            </if>
+            <if test="oAddress != null">
+                o_address,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="oId != null">
+                #{oId,jdbcType=INTEGER},
+            </if>
+            <if test="oDate != null">
+                #{oDate,jdbcType=VARCHAR},
+            </if>
+            <if test="oPayment != null">
+                #{oPayment,jdbcType=VARCHAR},
+            </if>
+            <if test="oUId != null">
+                #{oUId,jdbcType=INTEGER},
+            </if>
+            <if test="oPrice != null">
+                #{oPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="oStatus != null">
+                #{oStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="oContent != null">
+                #{oContent,jdbcType=VARCHAR},
+            </if>
+            <if test="oAddress != null">
+                #{oAddress,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.baisexy.bs_order.api.entity.Orders">
+        update orders
+        <set>
+            <if test="oDate != null">
+                o_date = #{oDate,jdbcType=VARCHAR},
+            </if>
+            <if test="oPayment != null">
+                o_payment = #{oPayment,jdbcType=VARCHAR},
+            </if>
+            <if test="oUId != null">
+                o_u_id = #{oUId,jdbcType=INTEGER},
+            </if>
+            <if test="oPrice != null">
+                o_price = #{oPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="oStatus != null">
+                o_status = #{oStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="oContent != null">
+                o_content = #{oContent,jdbcType=VARCHAR},
+            </if>
+            <if test="oAddress != null">
+                o_address = #{oAddress,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where o_id = #{oId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.baisexy.bs_order.api.entity.Orders">
+        update orders
+        set o_date    = #{oDate,jdbcType=VARCHAR},
+            o_payment = #{oPayment,jdbcType=VARCHAR},
+            o_u_id    = #{oUId,jdbcType=INTEGER},
+            o_price   = #{oPrice,jdbcType=DECIMAL},
+            o_status  = #{oStatus,jdbcType=VARCHAR},
+            o_content = #{oContent,jdbcType=VARCHAR},
+            o_address = #{oAddress,jdbcType=VARCHAR}
+        where o_id = #{oId,jdbcType=INTEGER}
+    </update>
+
+    <select id="findOrdersByUser" resultType="cn.baisexy.bs_order.api.dto.UserOrderVO">
+        select <include refid="Base_Column_List"></include>,user.u_name as uName from orders left join user
+        on o_u_id = u_id where o_u_id = #{uId} ORDER BY  o_id desc ;
+    </select>
+
+    <update id="updateStatus">
+        update orders
+        set o_status = #{oStatus}
+        where o_id = #{oId}
+    </update>
+
+    <select id="getFoodAndAmounts" resultType="cn.baisexy.bs_order.api.pojo.charts.FoodAndAmount">
+        select sum(f_amount) as amount, f.f_name as fname
+        from orders od,
+             food f
+        where od.o_f_id = f.f_id
+        group by od_f_id
+    </select>
+
+    <select id="findOrder" resultType="cn.baisexy.bs_order.api.dto.UserOrderVO">
+        select <include refid="Base_Column_List"></include>,user.u_name as uName from orders left join user
+        on o_u_id = u_id order by o_id desc limit #{begin},#{end}
+    </select>
+
+</mapper>

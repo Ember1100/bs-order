@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.baisexy.bs_order.system.mapper.MessageMapper">
+  <resultMap id="BaseResultMap" type="cn.baisexy.bs_order.api.entity.Message">
+    <id column="m_id" jdbcType="INTEGER" property="mId" />
+    <result column="m_u_id" jdbcType="INTEGER" property="mUId" />
+    <result column="m_content" jdbcType="VARCHAR" property="mContent" />
+    <result column="m_date" jdbcType="VARCHAR" property="mDate" />
+    <result column="m_f_id" jdbcType="INTEGER" property="mFId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    m_id, m_u_id, m_content, m_date, m_f_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from message
+    where m_id = #{mId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from message
+    where m_id = #{mId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.baisexy.bs_order.api.entity.Message">
+    insert into message (m_id, m_u_id, m_content, 
+      m_date, m_f_id)
+    values (#{mId,jdbcType=INTEGER}, #{mUId,jdbcType=INTEGER}, #{mContent,jdbcType=VARCHAR}, 
+      #{mDate,jdbcType=VARCHAR}, #{mFId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.baisexy.bs_order.api.entity.Message">
+    insert into message
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="mId != null">
+        m_id,
+      </if>
+      <if test="mUId != null">
+        m_u_id,
+      </if>
+      <if test="mContent != null">
+        m_content,
+      </if>
+      <if test="mDate != null">
+        m_date,
+      </if>
+      <if test="mFId != null">
+        m_f_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="mId != null">
+        #{mId,jdbcType=INTEGER},
+      </if>
+      <if test="mUId != null">
+        #{mUId,jdbcType=INTEGER},
+      </if>
+      <if test="mContent != null">
+        #{mContent,jdbcType=VARCHAR},
+      </if>
+      <if test="mDate != null">
+        #{mDate,jdbcType=VARCHAR},
+      </if>
+      <if test="mFId != null">
+        #{mFId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.baisexy.bs_order.api.entity.Message">
+    update message
+    <set>
+      <if test="mUId != null">
+        m_u_id = #{mUId,jdbcType=INTEGER},
+      </if>
+      <if test="mContent != null">
+        m_content = #{mContent,jdbcType=VARCHAR},
+      </if>
+      <if test="mDate != null">
+        m_date = #{mDate,jdbcType=VARCHAR},
+      </if>
+      <if test="mFId != null">
+        m_f_id = #{mFId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where m_id = #{mId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.baisexy.bs_order.api.entity.Message">
+    update message
+    set m_u_id = #{mUId,jdbcType=INTEGER},
+      m_content = #{mContent,jdbcType=VARCHAR},
+      m_date = #{mDate,jdbcType=VARCHAR},
+      m_f_id = #{mFId,jdbcType=INTEGER}
+    where m_id = #{mId,jdbcType=INTEGER}
+  </update>
+</mapper>

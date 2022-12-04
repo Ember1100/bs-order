@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0,width=device-width, user-scalable=no"/>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <title>Title</title>
+</head>
+<body>
+<p>方式一</p>
+<img alt="验证码1" id="code1" onclick="check1()"/>
+
+<p>方式二</p>
+<img alt="验证码2" id="code2" onclick="check2()"/>
+</body>
+</html>
+<script>
+    getCode1();
+    getCode2();
+
+    // 点击事件
+    function check1() {
+        getCode1();
+    }
+
+    // 点击事件
+    function check2() {
+        getCode2();
+    }
+
+    // 响应类型以blob的方式
+    function getCode1() {
+        var url = "http://127.0.0.1/user/getcode";
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        xhr.responseType = "blob";
+        xhr.onload = function () {
+            if (this.status === 200) {
+                var res = this.response;
+                $("#code1").attr("src", window.URL.createObjectURL(res));
+            }
+        };
+        xhr.send();
+    }
+
+    // 响应类型以arraybuffer的方式
+    function getCode2() {
+        var url = "http://127.0.0.1/user/getcode";
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        xhr.responseType = "arraybuffer";
+        xhr.onload = function () {
+            if (this.status === 200) {
+                var res = this.response;
+                $("#code2").attr("src", "data:image/png;base64," +
+                    btoa(
+                        new Uint8Array(res).reduce(function (data, byte) {
+                            console.log(data);
+                            return data + String.fromCharCode(byte)
+                        }, '')
+                    ));
+            }
+        };
+        xhr.send();
+    }
+</script>

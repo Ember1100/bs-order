@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.baisexy.bs_order.system.mapper.AdminMapper">
+  <resultMap id="BaseResultMap" type="cn.baisexy.bs_order.api.entity.Admin">
+    <id column="a_id" jdbcType="INTEGER" property="aId" />
+    <result column="a_name" jdbcType="VARCHAR" property="aName" />
+    <result column="a_pwd" jdbcType="VARCHAR" property="aPwd" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    a_id, a_name, a_pwd
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from admin
+    where a_id = #{aId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from admin
+    where a_id = #{aId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.baisexy.bs_order.api.entity.Admin">
+    insert into admin (a_id, a_name, a_pwd
+      )
+    values (#{aId,jdbcType=INTEGER}, #{aName,jdbcType=VARCHAR}, #{aPwd,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.baisexy.bs_order.api.entity.Admin">
+    insert into admin
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="aId != null">
+        a_id,
+      </if>
+      <if test="aName != null">
+        a_name,
+      </if>
+      <if test="aPwd != null">
+        a_pwd,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="aId != null">
+        #{aId,jdbcType=INTEGER},
+      </if>
+      <if test="aName != null">
+        #{aName,jdbcType=VARCHAR},
+      </if>
+      <if test="aPwd != null">
+        #{aPwd,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.baisexy.bs_order.api.entity.Admin">
+    update admin
+    <set>
+      <if test="aName != null">
+        a_name = #{aName,jdbcType=VARCHAR},
+      </if>
+      <if test="aPwd != null">
+        a_pwd = #{aPwd,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where a_id = #{aId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.baisexy.bs_order.api.entity.Admin">
+    update admin
+    set a_name = #{aName,jdbcType=VARCHAR},
+      a_pwd = #{aPwd,jdbcType=VARCHAR}
+    where a_id = #{aId,jdbcType=INTEGER}
+  </update>
+
+
+  <!--登录功能-->
+  <select id="selectByUsernameAndPassword" resultMap="BaseResultMap">
+    select * from admin where a_name =#{aName} and a_pwd = #{aPwd}
+  </select>
+
+
+</mapper>
